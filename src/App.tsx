@@ -1,5 +1,4 @@
 import { Navigate, Route, Routes } from "react-router";
-import "./App.css";
 import PromptPage from "./pages/PromptPage";
 import QuizPage from "./pages/QuizPage";
 import ResultPage from "./pages/ResultPage";
