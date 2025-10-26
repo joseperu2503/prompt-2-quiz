@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useQuizStore } from "../store/quizStore";
 
-const QuestionPage = () => {
+const QuizPage = () => {
   const { questions, addAnswer } = useQuizStore();
   const navigate = useNavigate();
 
@@ -45,18 +45,18 @@ const QuestionPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0B1120] text-gray-100 flex items-center justify-center px-6 py-10">
+    <div className="min-h-screen bg-linear-to-br from-[#0F172A] via-[#1E293B] to-[#0B1120] text-gray-100 flex items-center justify-center px-6 py-10">
       <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Columna izquierda */}
-        <div className="flex flex-col justify-between bg-[#111827] p-8 rounded-2xl shadow-lg border border-gray-800">
+        <div className="flex flex-col p-8">
           {/* Progreso */}
           <div>
-            <div className="text-sm text-gray-400 mb-2">
+            <div className="text-sm text-gray-300 mb-2">
               Pregunta {currentIndex + 1} de {questions.length}
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2 mb-6">
               <div
-                className="bg-gradient-to-r from-indigo-500 to-cyan-400 h-2 rounded-full transition-all"
+                className="bg-linear-to-r from-indigo-500 to-cyan-400 h-2 rounded-full transition-all"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
@@ -67,7 +67,7 @@ const QuestionPage = () => {
             </h2>
           </div>
 
-          <div className="text-sm text-gray-500 mt-8">
+          <div className="text-sm text-gray-400 mt-8">
             Generado con IA · Prompt2Quiz
           </div>
         </div>
@@ -80,7 +80,7 @@ const QuestionPage = () => {
               const isCorrect = i === currentQuestion.correct;
 
               let base =
-                "w-full text-left p-4 rounded-xl border transition-all duration-300 text-gray-200";
+                "w-full text-left p-4 rounded-xl border transition-all duration-300 text-gray-100 cursor-pointer";
               let styles = "border-gray-700 hover:bg-gray-800";
 
               if (showAnswer && isSelected && isCorrect)
@@ -107,4 +107,4 @@ const QuestionPage = () => {
   );
 };
 
-export default QuestionPage;
+export default QuizPage;

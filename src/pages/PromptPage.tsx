@@ -27,7 +27,7 @@ const PromptPage = () => {
       console.log("✅ Quiz generado:", response.data);
 
       setQuestions(response.data || []);
-      navigate("/question");
+      navigate("/quiz");
     } catch (error) {
       console.error("❌ Error al generar el quiz:", error);
       alert("Hubo un error generando el quiz. Intenta nuevamente.");
@@ -37,13 +37,13 @@ const PromptPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0B1120] text-gray-100 flex items-center justify-center px-6 py-10">
+    <div className="min-h-screen bg-linear-to-br from-[#0F172A] via-[#1E293B] to-[#0B1120] text-gray-100 flex items-center justify-center px-6 py-10">
       <div className="w-full max-w-3xl bg-[#111827] rounded-2xl shadow-lg border border-gray-800 p-10">
-        <h1 className="text-4xl font-bold mb-4 text-center bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-4 text-center bg-linear-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
           Prompt2Quiz
         </h1>
 
-        <p className="text-gray-400 mb-8 text-center text-lg">
+        <p className="text-gray-200 mb-8 text-center text-lg">
           Escribe un tema o prompt para generar un quiz con inteligencia
           artificial.
         </p>
@@ -61,15 +61,15 @@ const PromptPage = () => {
             disabled={loading}
             className={`${
               loading
-                ? "bg-gradient-to-r from-indigo-400 to-cyan-400 opacity-70 cursor-not-allowed"
-                : "bg-gradient-to-r from-indigo-500 to-cyan-400 hover:opacity-90"
+                ? "bg-linear-to-r from-indigo-400 to-cyan-400 opacity-70 cursor-not-allowed"
+                : "bg-linear-to-r from-indigo-500 to-cyan-400 hover:opacity-90 cursor-pointer"
             } transition-all text-white py-3 rounded-xl text-lg font-semibold shadow-md`}
           >
             {loading ? "Generando..." : "Generar Quiz"}
           </button>
         </div>
 
-        <div className="mt-8 text-center text-sm text-gray-500">
+        <div className="mt-8 text-center text-sm text-gray-400">
           ⚙️{" "}
           {loading
             ? "Creando tu quiz con IA..."
