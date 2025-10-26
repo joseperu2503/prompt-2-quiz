@@ -5,9 +5,8 @@ import { useQuizStore, type Question } from "../store/quizStore";
 
 const PromptPage = () => {
   const navigate = useNavigate();
-  const { setPrompt, setQuestions } = useQuizStore();
+  const { prompt, setPrompt, setQuestions } = useQuizStore();
 
-  const [prompt, setPromptInput] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -17,7 +16,6 @@ const PromptPage = () => {
 
     try {
       setLoading(true);
-      setPrompt(prompt);
 
       const response = await axios.post<Question[]>(
         "http://localhost:3000/api/prompt2quiz/generate-quiz",
@@ -53,7 +51,7 @@ const PromptPage = () => {
             className="w-full h-40 bg-[#0B1120] border border-gray-700 rounded-xl p-4 text-gray-100 resize-none focus:outline-none focus:ring-2 focus:ring-cyan-500"
             placeholder="Ejemplo: Crea un quiz sobre El Señor de los Anillos"
             value={prompt}
-            onChange={(e) => setPromptInput(e.target.value)}
+            onChange={(e) => setPrompt(e.target.value)}
           />
 
           <button
