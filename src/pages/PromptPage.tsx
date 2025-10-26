@@ -1,10 +1,13 @@
 import axios from "axios";
 import { useState, type MouseEvent } from "react";
 import { useNavigate } from "react-router";
+import { useQuizStore, type Question } from "../store/quizStore";
 
 const PromptPage = () => {
   const navigate = useNavigate();
-  const [prompt, setPrompt] = useState("");
+  const { setPrompt, setQuestions } = useQuizStore();
+
+  const [prompt, setPromptInput] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -14,17 +17,16 @@ const PromptPage = () => {
 
     try {
       setLoading(true);
+      setPrompt(prompt);
 
-      const response = await axios.post(
+      const response = await axios.post<Question[]>(
         "http://localhost:3000/api/prompt2quiz/generate-quiz",
-        {
-          prompt,
-        }
+        { prompt }
       );
 
       console.log("✅ Quiz generado:", response.data);
 
-      // puedes guardar el resultado en el estado global o localStorage si lo necesitas
+      setQuestions(response.data || []);
       navigate("/question");
     } catch (error) {
       console.error("❌ Error al generar el quiz:", error);
@@ -35,48 +37,43 @@ const PromptPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 flex items-center justify-center p-6">
-      <div className="max-w-3xl w-full bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-700">
-        <h1 className="text-3xl font-bold mb-4 text-indigo-400 text-center">
-          🧠 Prompt2Quiz
+    <div className="min-h-screen bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0B1120] text-gray-100 flex items-center justify-center px-6 py-10">
+      <div className="w-full max-w-3xl bg-[#111827] rounded-2xl shadow-lg border border-gray-800 p-10">
+        <h1 className="text-4xl font-bold mb-4 text-center bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+          Prompt2Quiz
         </h1>
 
-        <p className="text-gray-400 mb-8 text-center">
+        <p className="text-gray-400 mb-8 text-center text-lg">
           Escribe un tema o prompt para generar un quiz con inteligencia
           artificial.
         </p>
 
         <div className="flex flex-col gap-6">
-          {/* Área del prompt */}
           <textarea
-            className="w-full h-40 bg-gray-900 border border-gray-700 rounded-xl p-4 text-gray-100 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full h-40 bg-[#0B1120] border border-gray-700 rounded-xl p-4 text-gray-100 resize-none focus:outline-none focus:ring-2 focus:ring-cyan-500"
             placeholder="Ejemplo: Crea un quiz sobre El Señor de los Anillos"
             value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
+            onChange={(e) => setPromptInput(e.target.value)}
           />
 
-          {/* Botón */}
           <button
             onClick={handleSubmit}
             disabled={loading}
             className={`${
               loading
-                ? "bg-indigo-400 cursor-not-allowed"
-                : "bg-indigo-500 hover:bg-indigo-600"
-            } transition-colors text-white py-3 rounded-xl text-lg font-semibold shadow-md`}
+                ? "bg-gradient-to-r from-indigo-400 to-cyan-400 opacity-70 cursor-not-allowed"
+                : "bg-gradient-to-r from-indigo-500 to-cyan-400 hover:opacity-90"
+            } transition-all text-white py-3 rounded-xl text-lg font-semibold shadow-md`}
           >
             {loading ? "Generando..." : "Generar Quiz"}
           </button>
         </div>
 
-        {/* Vista previa del loader / estado */}
-        <div className="mt-8 text-center">
-          <p className="text-sm text-gray-500">
-            ⚙️{" "}
-            {loading
-              ? "Creando tu quiz con IA..."
-              : "El quiz se generará automáticamente con IA."}
-          </p>
+        <div className="mt-8 text-center text-sm text-gray-500">
+          ⚙️{" "}
+          {loading
+            ? "Creando tu quiz con IA..."
+            : "El quiz se generará automáticamente con IA."}
         </div>
       </div>
     </div>

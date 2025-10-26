@@ -1,34 +1,10 @@
-import { useState } from "react";
-
-interface Question {
-  id: number;
-  text: string;
-  options: { text: string; isCorrect: boolean }[];
-}
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { useQuizStore } from "../store/quizStore";
 
 const QuestionPage = () => {
-  const questions: Question[] = [
-    {
-      id: 1,
-      text: "¿Quién es el portador del Anillo Único en El Señor de los Anillos?",
-      options: [
-        { text: "Gandalf", isCorrect: false },
-        { text: "Frodo", isCorrect: true },
-        { text: "Aragorn", isCorrect: false },
-        { text: "Legolas", isCorrect: false },
-      ],
-    },
-    {
-      id: 2,
-      text: "¿En qué reino se encuentra la ciudad de Minas Tirith?",
-      options: [
-        { text: "Rohan", isCorrect: false },
-        { text: "Mordor", isCorrect: false },
-        { text: "Gondor", isCorrect: true },
-        { text: "Isengard", isCorrect: false },
-      ],
-    },
-  ];
+  const { questions, addAnswer } = useQuizStore();
+  const navigate = useNavigate();
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -41,15 +17,32 @@ const QuestionPage = () => {
     if (showAnswer) return;
     setSelected(index);
     setShowAnswer(true);
+    addAnswer(index); // ✅ guardamos la respuesta seleccionada
 
     setTimeout(() => {
       if (currentIndex < questions.length - 1) {
-        setCurrentIndex(currentIndex + 1);
+        setCurrentIndex((prev) => prev + 1);
         setSelected(null);
         setShowAnswer(false);
+      } else {
+        navigate("/result");
       }
     }, 1200);
   };
+
+  useEffect(() => {
+    if (!questions || questions.length === 0) {
+      navigate("/", { replace: true });
+    }
+  }, [questions, navigate]);
+
+  if (!currentQuestion) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-gray-300">
+        <p className="text-lg">No hay preguntas generadas. 🧐</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0B1120] text-gray-100 flex items-center justify-center px-6 py-10">
@@ -70,11 +63,10 @@ const QuestionPage = () => {
 
             {/* Pregunta */}
             <h2 className="text-2xl md:text-3xl font-semibold leading-snug text-white">
-              {currentQuestion.text}
+              {currentQuestion.question}
             </h2>
           </div>
 
-          {/* Footer (opcional: puedes poner temporizador, ícono, etc.) */}
           <div className="text-sm text-gray-500 mt-8">
             Generado con IA · Prompt2Quiz
           </div>
@@ -83,9 +75,9 @@ const QuestionPage = () => {
         {/* Columna derecha */}
         <div className="bg-[#111827] p-8 rounded-2xl shadow-lg border border-gray-800 flex flex-col justify-center">
           <div className="space-y-4">
-            {currentQuestion.options.map((opt, i) => {
+            {currentQuestion.options.map((option, i) => {
               const isSelected = selected === i;
-              const isCorrect = opt.isCorrect;
+              const isCorrect = i === currentQuestion.correct;
 
               let base =
                 "w-full text-left p-4 rounded-xl border transition-all duration-300 text-gray-200";
@@ -104,7 +96,7 @@ const QuestionPage = () => {
                   onClick={() => handleSelect(i)}
                   className={`${base} ${styles}`}
                 >
-                  {opt.text}
+                  {option}
                 </button>
               );
             })}
