@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useQuizStore } from "../store/quizStore";
@@ -39,29 +38,49 @@ const QuizPage = () => {
   const handleExplain = async () => {
     setShowExplanation(true);
     setLoadingExplanation(true);
-    setExplanationText(null);
+    setExplanationText("");
 
     try {
-      const response = await axios.post(
+      const response = await fetch(
         "http://localhost:3000/api/prompt2quiz/explain-answer",
         {
-          question: currentQuestion.question,
-          options: currentQuestion.options,
-          correct: currentQuestion.correct,
-          answer: selected,
-        },
-        {
-          responseType: "text",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            question: currentQuestion.question,
+            options: currentQuestion.options,
+            correct: currentQuestion.correct,
+            answer: selected,
+          }),
         }
       );
 
-      setExplanationText(response.data);
+      if (!response.body) throw new Error("No se recibió un stream válido");
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = "";
+
+      // 🔁 Leer el stream chunk por chunk
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        fullText += chunk;
+
+        // Mostrar texto progresivamente
+        setExplanationText((prev) => (prev ?? "") + chunk);
+      }
+
+      setLoadingExplanation(false);
     } catch (error) {
       console.error("Error al obtener la explicación:", error);
       setExplanationText(
         "❌ Ocurrió un error al generar la explicación. Intenta nuevamente."
       );
-    } finally {
       setLoadingExplanation(false);
     }
   };
@@ -179,10 +198,10 @@ const QuizPage = () => {
             {loadingExplanation ? (
               <div className="flex items-center gap-2 text-gray-400 italic">
                 Analizando la pregunta
-                <span className="flex gap-1 ml-1">
-                  <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></span>
-                  <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce delay-150"></span>
-                  <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce delay-300"></span>
+                <span className="flex gap-2 ml-2">
+                  <span className="w-2.5 h-2.5 bg-cyan-400 rounded-full animate-bounce-strong"></span>
+                  <span className="w-2.5 h-2.5 bg-cyan-400 rounded-full animate-bounce-strong"></span>
+                  <span className="w-2.5 h-2.5 bg-cyan-400 rounded-full animate-bounce-strong"></span>
                 </span>
               </div>
             ) : (

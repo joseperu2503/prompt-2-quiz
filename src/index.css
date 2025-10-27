@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+@keyframes bounce-strong {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-bounce-strong {
+  animation: bounce-strong 1.2s ease-in-out infinite;
+}
+
+.animate-bounce-strong:nth-child(1) {
+  animation-delay: 0s;
+}
+.animate-bounce-strong:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.animate-bounce-strong:nth-child(3) {
+  animation-delay: 0.4s;
+}
