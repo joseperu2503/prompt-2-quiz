@@ -18,11 +18,9 @@ const PromptPage = () => {
       setLoading(true);
 
       const response = await axios.post<Question[]>(
-        "http://localhost:3000/api/prompt2quiz/generate-quiz",
+        `${import.meta.env.VITE_BASE_URL}/prompt2quiz/generate-quiz`,
         { prompt }
       );
-
-      console.log("✅ Quiz generado:", response.data);
 
       setQuestions(response.data || []);
       navigate("/quiz");
@@ -51,7 +49,7 @@ const PromptPage = () => {
 
         <div className="flex flex-col gap-6">
           <textarea
-            className="w-full h-40 bg-[#0B1120] border border-gray-700 rounded-xl p-4 text-gray-100 resize-none focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            className="w-full h-40 bg-[#0B1120] border border-gray-700 rounded-xl p-4 text-gray-100 resize-none focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all ease-in-out"
             placeholder="Ejemplo: Crea un quiz sobre El Señor de los Anillos"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
