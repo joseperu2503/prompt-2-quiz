@@ -37,8 +37,11 @@ const PromptPage = () => {
   return (
     <div className="min-h-screen bg-linear-to-br from-[#0F172A] via-[#1E293B] to-[#0B1120] text-gray-100 flex items-center justify-center px-6 py-10">
       <div className="w-full max-w-3xl bg-[#111827] rounded-2xl shadow-lg border border-gray-800 p-10">
-        <h1 className="text-4xl font-bold mb-4 text-center bg-linear-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
-          Prompt2Quiz
+        <h1 className="text-center mb-4 text-4xl ">
+          <span>🧠</span>{" "}
+          <span className="font-bold bg-linear-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+            Prompt2Quiz
+          </span>
         </h1>
 
         <p className="text-gray-200 mb-8 text-center text-lg">
